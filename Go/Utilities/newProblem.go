@@ -9,7 +9,7 @@ import (
 )
 
 func readTemplate(fileName string) string {
-	content, err := os.ReadFile(filepath.Join("templates", fileName))
+	content, err := os.ReadFile(filepath.Join("../templates", fileName))
 	if err != nil {
 		log.Fatalf("Failed to read template file: %v", err)
 	}

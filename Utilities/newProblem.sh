@@ -10,7 +10,7 @@ if [ $# -ne 3 ]; then
 fi
 
 # Check if the problem already exists
-if [ -d ../$3/Problems/$2_$1 ]; then
+if [ -d "../$3/Problems/$2_$1" ]; then
     echo "Problem already exists"
     exit 1
 fi
@@ -18,82 +18,49 @@ fi
 # Create the problem directory in the correct location
 # Eg. For newProblem Duplicate_Integer 1 go to Go/Problems/1
 filename=$2_$1
-mkdir -p ../$3/Problems/$filename
-cd ../$3/Problems/$filename
+mkdir -p "../$3/Problems/$filename"
 
 # Debugging: Check current directory
 echo "Current directory: $(pwd)"
 
 # For Go, create the main.go and main_test.go files
 if [ "$3" = "Go" ]; then
-    cat <<EOL > main.go
-package main
+    # Read the templates
+    mainTemplate=$(cat "../Go/templates/main.go")
+    testTemplate=$(cat "../Go/templates/main.test.go")
 
-import "fmt"
+    # Replace placeholders with actual values
+    mainContent=$(echo "$mainTemplate" | sed "s/{{.ProblemName}}/$1/")
+    testContent=$(echo "$testTemplate" | sed "s/{{.ProblemName}}/$1/")
 
-func main() {
-    fmt.Println("Hello, $1!")
-}
-EOL
+    # Write the main.go file
+    echo "$mainContent" > "../$3/Problems/$filename/main.go"
 
-    cat <<EOL > main_test.go
-package main
-
-import (
-    "bytes"
-    "io"
-    "os"
-    "testing"
-)
-
-func TestMain(t *testing.T) {
-    // Save the original stdout
-    originalStdout := os.Stdout
-    r, w, _ := os.Pipe()
-    os.Stdout = w
-
-    // Call the main function
-    main()
-
-    // Capture the output
-    w.Close()
-    var buf bytes.Buffer
-    io.Copy(&buf, r)
-    os.Stdout = originalStdout
-
-    // Check the output
-    expected := "Hello, $1!\\n"
-    if buf.String() != expected {
-        t.Errorf("expected %q but got %q", expected, buf.String())
-    }
-}
-EOL
+    # Write the main_test.go file
+    echo "$testContent" > "../$3/Problems/$filename/main_test.go"
 fi
-
 
 # For JavaScript, create the main.js and main.test.js files
 if [ "$3" = "JS" ]; then
-    cat <<EOL > main.js
-module.exports = "Hello, Is_Anagram!";
-EOL
+    # Read the templates
+    mainTemplate=$(cat "../JS/templates/main.js")
+    testTemplate=$(cat "../JS/templates/main.test.js")
 
-    cat <<EOL > main.test.js
-const Solution = require('./main'); // Adjust the path if necessary
+    # Replace placeholders with actual values
+    mainContent=$(echo "$mainTemplate" | sed "s/{{.ProblemName}}/$1/")
+    testContent=$(echo "$testTemplate" | sed "s/{{.ProblemName}}/$1/")
 
-test('main function output', () => {
-    const output = Solution
-    console.log(output)
-    const expected = "Hello, Is_Anagram!";
-    expect(output).toBe(expected);
-});
+    # Write the main.js file
+    echo "$mainContent" > "../$3/Problems/$filename/main.js"
 
-EOL
+    # Write the main_test.js file
+    echo "$testContent" > "../$3/Problems/$filename/main_test.js"
 fi
 
 # Debugging: Check if files are created
-if [ -f main.go ] && [ -f main_test.go ]; then
+if [ -f "../$3/Problems/$filename/main.go" ] && [ -f "../$3/Problems/$filename/main_test.go" ]; then
     echo "Go files created successfully"
-elif [ -f main.js ] && [ -f main.test.js ]; then
+elif [ -f "../$3/Problems/$filename/main.js" ] && [ -f "../$3/Problems/$filename/main_test.js" ]; then
     echo "JavaScript files created successfully"
 else
     echo "Failed to create files"
