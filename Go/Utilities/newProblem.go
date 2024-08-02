@@ -2,51 +2,23 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"text/template"
 )
 
-const goMainTemplate = `package main
-
-import "fmt"
-
-func main() {
-    fmt.Println("Hello, {{.ProblemName}}!")
+func readTemplate(fileName string) string {
+	content, err := os.ReadFile(filepath.Join("templates", fileName))
+	if err != nil {
+		log.Fatalf("Failed to read template file: %v", err)
+	}
+	return string(content)
 }
-`
 
-const goTestTemplate = `package main
+var goMainTemplate = readTemplate("main.go")
 
-import (
-    "bytes"
-    "io"
-    "os"
-    "testing"
-)
-
-func TestMain(t *testing.T) {
-    // Save the original stdout
-    originalStdout := os.Stdout
-    r, w, _ := os.Pipe()
-    os.Stdout = w
-
-    // Call the main function
-    main()
-
-    // Capture the output
-    w.Close()
-    var buf bytes.Buffer
-    io.Copy(&buf, r)
-    os.Stdout = originalStdout
-
-    // Check the output
-    expected := "Hello, {{.ProblemName}}!\n"
-    if buf.String() != expected {
-        t.Errorf("expected %q but got %q", expected, buf.String())
-    }
-}
-`
+var goTestTemplate = readTemplate("main.test.go")
 
 type Problem struct {
 	ProblemName   string
