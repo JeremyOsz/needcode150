@@ -80,8 +80,6 @@ EOL
     cat <<EOL > main.test.js
 const Solution = require('./main'); // Adjust the path if necessary
 
-// import 
-
 test('main function output', () => {
     const output = Solution
     console.log(output)

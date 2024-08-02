@@ -41,7 +41,7 @@ func TestMain(t *testing.T) {
     os.Stdout = originalStdout
 
     // Check the output
-    expected := "Hello, {{.ProblemName}}!\\n"
+    expected := "Hello, {{.ProblemName}}!\n"
     if buf.String() != expected {
         t.Errorf("expected %q but got %q", expected, buf.String())
     }
@@ -64,7 +64,7 @@ func main() {
 		ProblemNumber: os.Args[2],
 	}
 
-	dirPath := filepath.Join("../", fmt.Sprintf("%s_%s", problem.ProblemNumber, problem.ProblemName))
+	dirPath := filepath.Join("../Problems/", fmt.Sprintf("%s_%s", problem.ProblemNumber, problem.ProblemName))
 	if _, err := os.Stat(dirPath); !os.IsNotExist(err) {
 		fmt.Println("Problem already exists")
 		os.Exit(1)
