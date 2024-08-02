@@ -2,20 +2,10 @@ const fs = require('fs');
 const path = require('path');
 const { exec } = require('child_process');
 
-const mainTemplate = `
-module.exports = "Hello, Is_Anagram!";
-`;
 
-const testTemplate = `
-const Solution = require('./main'); // Adjust the path if necessary
+const mainTemplate = fs.readFileSync(path.join(__dirname, 'templates', 'mainTemplate.js'), 'utf-8');
 
-test('main function output', () => {
-    const output = Solution
-    console.log(output)
-    const expected = "Hello, Is_Anagram!";
-    expect(output).toBe(expected);
-});
-`;
+const testTemplate = fs.readFileSync(path.join(__dirname, 'templates', 'testTemplate.js'), 'utf-8');
 
 function createFileFromTemplate(filePath, template, problem) {
     const content = template.replace(/{{ProblemName}}/g, problem.problemName);
