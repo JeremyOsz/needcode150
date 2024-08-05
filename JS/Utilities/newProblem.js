@@ -5,7 +5,7 @@ const { exec } = require('child_process');
 
 const mainTemplate = fs.readFileSync(path.join(__dirname, '../templates', 'main.js'), 'utf-8');
 
-const testTemplate = fs.readFileSync(path.join(__dirname, '../templates', 'test.js'), 'utf-8');
+const testTemplate = fs.readFileSync(path.join(__dirname, '../templates', 'main.test.js'), 'utf-8');
 
 function createFileFromTemplate(filePath, template, problem) {
     const content = template.replace(/{{ProblemName}}/g, problem.problemName);
