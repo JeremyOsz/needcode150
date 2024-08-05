@@ -40,6 +40,8 @@ class Solution {
             charCount[char.charCodeAt(0) - 'a'.charCodeAt(0)]++;
         }
 
+        console.log(charCount)
+
         // Convert the frequency count to a string key
         const key = charCount.join('#');
         console.log(key)
